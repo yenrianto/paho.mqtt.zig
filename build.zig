@@ -4,7 +4,7 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const Mode = enum { sync, @"async" };
+    const Mode = enum { sync, async };
     const mode = b.option(Mode, "client_mode", "Select either sync or async client") orelse .sync;
     const enable_ssl = b.option(bool, "enable_ssl", "Link OpenSSL for TLS encryption") orelse false;
     const high_perf_mode = b.option(bool, "high_perf_mode", "Disable tracing and heap tracking") orelse true;
@@ -35,13 +35,16 @@ pub fn build(b: *std.Build) void {
         module.linkSystemLibrary(mqtt_lib_name, .{});
     } else {
         const dep_paho_mqtt_c = b.lazyDependency("paho_mqtt_c", .{}) orelse return;
-        const lib_paho_mqtt_c = b.addStaticLibrary(.{
+        const lib_paho_mqtt_c = b.addLibrary(.{
+            .linkage = .static,
             .name = "paho_mqtt_c",
-            .target = target,
-            .optimize = optimize,
-            .link_libc = true,
-            .pic = pie,
-            .strip = strip,
+            .root_module = b.createModule(.{
+                .target = target,
+                .optimize = optimize,
+                .link_libc = true,
+                .pic = pie,
+                .strip = strip,
+            }),
         });
         module.linkLibrary(lib_paho_mqtt_c);
 
@@ -61,15 +64,16 @@ pub fn build(b: *std.Build) void {
 
         lib_paho_mqtt_c.addIncludePath(dep_paho_mqtt_c.path("include"));
 
-        var sources = std.ArrayList([]const u8).init(b.allocator);
+        var sources: std.ArrayList([]const u8) = .empty; // = std.ArrayList([]const u8).initCapacity(b.allocator, 0);
+        defer sources.deinit(b.allocator);
         switch (mode) {
-            .sync => sources.append("MQTTClient.c") catch @panic("OOM"),
-            .@"async" => sources.appendSlice(&.{
+            .sync => sources.append(b.allocator, "MQTTClient.c") catch @panic("OOM"),
+            .async => sources.appendSlice(b.allocator, &.{
                 "MQTTAsync.c",
                 "MQTTAsyncUtils.c",
             }) catch @panic("OOM"),
         }
-        sources.appendSlice(&.{
+        sources.appendSlice(b.allocator, &.{
             "MQTTTime.c",
             "MQTTProtocolClient.c",
             "Clients.c",
@@ -93,11 +97,11 @@ pub fn build(b: *std.Build) void {
             "WebSocket.c",
             "Proxy.c",
         }) catch @panic("OOM");
-        if (!high_perf_mode) sources.appendSlice(&.{
+        if (!high_perf_mode) sources.appendSlice(b.allocator, &.{
             "StackTrace.c",
             "Heap.c",
         }) catch @panic("OOM");
-        if (enable_ssl) sources.append("SSLSocket.c") catch @panic("OOM");
+        if (enable_ssl) sources.append(b.allocator, "SSLSocket.c") catch @panic("OOM");
 
         const cflags: []const []const u8 = &.{
             "-pedantic",
