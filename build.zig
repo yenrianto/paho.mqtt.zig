@@ -48,7 +48,7 @@ pub fn build(b: *std.Build) void {
         });
         module.linkLibrary(lib_paho_mqtt_c);
 
-        const paho_version = "1.13.4"; // TODO read files from tarball
+        const paho_version = "1.3.16"; // TODO read files from tarball
         const parsed_paho_version = std.SemanticVersion.parse(paho_version) catch @panic("invalid version: " ++ paho_version);
         const config_h = b.addConfigHeader(.{
             .style = .{ .cmake = dep_paho_mqtt_c.path("src/VersionInfo.h.in") },
