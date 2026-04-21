@@ -176,42 +176,42 @@ pub const TraceLevel = enum(c_int) {
     Fatal,
 };
 
-extern fn MQTTAsync_global_init(inits: *InitOptions) callconv(.C) void;
+extern fn MQTTAsync_global_init(inits: *InitOptions) callconv(.c) void;
 
-extern fn MQTTAsync_create(handle: *Handle, serverURI: [*:0]const u8, clientId: [*:0]const u8, persistence_type: Persistence, persistence_context: ?*anyopaque) callconv(.C) c_int;
-extern fn MQTTAsync_createWithOptions(handle: *Handle, serverURI: [*:0]const u8, clientId: [*:0]const u8, persistence_type: Persistence, persistence_context: ?*anyopaque, options: *CreateOptions) callconv(.C) c_int;
-extern fn MQTTAsync_destroy(handle: *Handle) callconv(.C) void;
+extern fn MQTTAsync_create(handle: *Handle, serverURI: [*:0]const u8, clientId: [*:0]const u8, persistence_type: Persistence, persistence_context: ?*anyopaque) callconv(.c) c_int;
+extern fn MQTTAsync_createWithOptions(handle: *Handle, serverURI: [*:0]const u8, clientId: [*:0]const u8, persistence_type: Persistence, persistence_context: ?*anyopaque, options: *CreateOptions) callconv(.c) c_int;
+extern fn MQTTAsync_destroy(handle: *Handle) callconv(.c) void;
 
-extern fn MQTTAsync_connect(handle: Handle, options: *ConnectOptions) callconv(.C) c_int;
-extern fn MQTTAsync_disconnect(handle: Handle, options: *const DisconnectOptions) callconv(.C) c_int;
-extern fn MQTTAsync_isConnected(handle: Handle) callconv(.C) c_int;
+extern fn MQTTAsync_connect(handle: Handle, options: *ConnectOptions) callconv(.c) c_int;
+extern fn MQTTAsync_disconnect(handle: Handle, options: *const DisconnectOptions) callconv(.c) c_int;
+extern fn MQTTAsync_isConnected(handle: Handle) callconv(.c) c_int;
 
-pub const ConnectionLostCB = fn (context: ?*anyopaque, cause: ?[*:0]u8) callconv(.C) void;
-pub const MessageArrivedCB = fn (context: ?*anyopaque, topicName: [*:0]u8, topicLen: c_int, message: *MqttMessage) callconv(.C) c_int;
-pub const DeliveryCompleteCB = fn (context: ?*anyopaque, tok: AsyncToken) callconv(.C) void;
-extern fn MQTTAsync_setCallbacks(handle: Handle, context: ?*anyopaque, cl: ?*const ConnectionLostCB, ma: *const MessageArrivedCB, dc: ?*const DeliveryCompleteCB) callconv(.C) c_int;
+pub const ConnectionLostCB = fn (context: ?*anyopaque, cause: ?[*:0]u8) callconv(.c) void;
+pub const MessageArrivedCB = fn (context: ?*anyopaque, topicName: [*:0]u8, topicLen: c_int, message: *MqttMessage) callconv(.c) c_int;
+pub const DeliveryCompleteCB = fn (context: ?*anyopaque, tok: AsyncToken) callconv(.c) void;
+extern fn MQTTAsync_setCallbacks(handle: Handle, context: ?*anyopaque, cl: ?*const ConnectionLostCB, ma: *const MessageArrivedCB, dc: ?*const DeliveryCompleteCB) callconv(.c) c_int;
 
-pub const ConnectedCB = fn (context: ?*anyopaque, cause: ?[*:0]u8) callconv(.C) void;
-extern fn MQTTAsync_setConnected(handle: Handle, context: ?*anyopaque, co: *const ConnectedCB) callconv(.C) c_int;
+pub const ConnectedCB = fn (context: ?*anyopaque, cause: ?[*:0]u8) callconv(.c) void;
+extern fn MQTTAsync_setConnected(handle: Handle, context: ?*anyopaque, co: *const ConnectedCB) callconv(.c) c_int;
 
-pub const DisconnectedCB = fn (context: ?*anyopaque, properties: *MqttProperties, reasonCode: MqttReasonCode) callconv(.C) void;
-extern fn MQTTAsync_setDisconnected(handle: Handle, context: ?*anyopaque, co: *const DisconnectedCB) callconv(.C) c_int;
+pub const DisconnectedCB = fn (context: ?*anyopaque, properties: *MqttProperties, reasonCode: MqttReasonCode) callconv(.c) void;
+extern fn MQTTAsync_setDisconnected(handle: Handle, context: ?*anyopaque, co: *const DisconnectedCB) callconv(.c) c_int;
 
-extern fn MQTTAsync_waitForCompletion(handle: Handle, dt: AsyncToken, timeout: c_ulong) callconv(.C) c_int;
-extern fn MQTTAsync_sendMessage(handle: Handle, destinationName: [*:0]const u8, msg: *const MqttMessage, response: *CallOptions) callconv(.C) c_int;
-extern fn MQTTAsync_subscribe(handle: Handle, topic: [*:0]const u8, qos: QoS, response: *ResponseOptions) callconv(.C) c_int;
-extern fn MQTTAsync_subscribeMany(handle: Handle, count: c_int, topic: [*][*:0]const u8, qos: [*]const QoS, response: *ResponseOptions) callconv(.C) c_int;
-extern fn MQTTAsync_unsubscribe(handle: Handle, topic: [*:0]const u8, response: *ResponseOptions) callconv(.C) c_int;
-extern fn MQTTAsync_unsubscribeMany(handle: Handle, count: c_int, topic: [*][*:0]const u8, response: *ResponseOptions) callconv(.C) c_int;
+extern fn MQTTAsync_waitForCompletion(handle: Handle, dt: AsyncToken, timeout: c_ulong) callconv(.c) c_int;
+extern fn MQTTAsync_sendMessage(handle: Handle, destinationName: [*:0]const u8, msg: *const MqttMessage, response: *CallOptions) callconv(.c) c_int;
+extern fn MQTTAsync_subscribe(handle: Handle, topic: [*:0]const u8, qos: QoS, response: *ResponseOptions) callconv(.c) c_int;
+extern fn MQTTAsync_subscribeMany(handle: Handle, count: c_int, topic: [*][*:0]const u8, qos: [*]const QoS, response: *ResponseOptions) callconv(.c) c_int;
+extern fn MQTTAsync_unsubscribe(handle: Handle, topic: [*:0]const u8, response: *ResponseOptions) callconv(.c) c_int;
+extern fn MQTTAsync_unsubscribeMany(handle: Handle, count: c_int, topic: [*][*:0]const u8, response: *ResponseOptions) callconv(.c) c_int;
 
-extern fn MQTTAsync_getPendingTokens(handle: Handle, tokens: *?[*]AsyncToken) callconv(.C) c_int;
+extern fn MQTTAsync_getPendingTokens(handle: Handle, tokens: *?[*]AsyncToken) callconv(.c) c_int;
 
-extern fn MQTTAsync_freeMessage(msg: **MqttMessage) callconv(.C) void;
-extern fn MQTTAsync_free(ptr: *anyopaque) callconv(.C) void;
+extern fn MQTTAsync_freeMessage(msg: **MqttMessage) callconv(.c) void;
+extern fn MQTTAsync_free(ptr: *anyopaque) callconv(.c) void;
 
-extern fn MQTTAsync_setTraceLevel(level: TraceLevel) callconv(.C) void;
-const TraceCallback = fn (level: TraceLevel, message: [*:0]u8) callconv(.C) void;
-extern fn MQTTAsync_setTraceCallback(callback: *const TraceCallback) callconv(.C) void;
+extern fn MQTTAsync_setTraceLevel(level: TraceLevel) callconv(.c) void;
+const TraceCallback = fn (level: TraceLevel, message: [*:0]u8) callconv(.c) void;
+extern fn MQTTAsync_setTraceCallback(callback: *const TraceCallback) callconv(.c) void;
 
 pub fn errno(rc: c_int) LibError!void {
     return switch (rc) {
