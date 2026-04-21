@@ -63,27 +63,27 @@ pub const ConnectOptions = extern struct {
     httpsProxy: ?*[*:0]const u8 = null,
 };
 
-extern fn MQTTClient_global_init(init_opt: *InitOptions) callconv(.C) void;
+extern fn MQTTClient_global_init(init_opt: *InitOptions) callconv(.c) void;
 
-extern fn MQTTClient_create(handle: *Handle, serverURI: [*:0]const u8, clientId: [*:0]const u8, persistence_type: Persistence, persistence_context: ?*anyopaque) callconv(.C) c_int;
-extern fn MQTTClient_createWithOptions(handle: *Handle, serverURI: [*:0]const u8, clientId: [*:0]const u8, persistence_type: Persistence, persistence_context: ?*anyopaque, options: *CreateOptions) callconv(.C) c_int;
-extern fn MQTTClient_destroy(handle: *Handle) callconv(.C) void;
+extern fn MQTTClient_create(handle: *Handle, serverURI: [*:0]const u8, clientId: [*:0]const u8, persistence_type: Persistence, persistence_context: ?*anyopaque) callconv(.c) c_int;
+extern fn MQTTClient_createWithOptions(handle: *Handle, serverURI: [*:0]const u8, clientId: [*:0]const u8, persistence_type: Persistence, persistence_context: ?*anyopaque, options: *CreateOptions) callconv(.c) c_int;
+extern fn MQTTClient_destroy(handle: *Handle) callconv(.c) void;
 
-extern fn MQTTClient_waitForCompletion(handle: Handle, dt: DeliveryToken, timeout: c_ulong) callconv(.C) c_int;
+extern fn MQTTClient_waitForCompletion(handle: Handle, dt: DeliveryToken, timeout: c_ulong) callconv(.c) c_int;
 
-extern fn MQTTClient_connect(handle: Handle, options: *ConnectOptions) callconv(.C) c_int;
-extern fn MQTTClient_connect5(handle: Handle, options: *ConnectOptions, connectProperties: ?*MqttProperties, willProperties: ?*MqttProperties) callconv(.C) MqttResponse;
-extern fn MQTTClient_disconnect(handle: Handle, timeout: c_int) callconv(.C) c_int;
+extern fn MQTTClient_connect(handle: Handle, options: *ConnectOptions) callconv(.c) c_int;
+extern fn MQTTClient_connect5(handle: Handle, options: *ConnectOptions, connectProperties: ?*MqttProperties, willProperties: ?*MqttProperties) callconv(.c) MqttResponse;
+extern fn MQTTClient_disconnect(handle: Handle, timeout: c_int) callconv(.c) c_int;
 
-extern fn MQTTClient_publishMessage5(handle: Handle, topicName: [*:0]const u8, msg: *MqttMessage, dt: *DeliveryToken) callconv(.C) MqttResponse;
+extern fn MQTTClient_publishMessage5(handle: Handle, topicName: [*:0]const u8, msg: *MqttMessage, dt: *DeliveryToken) callconv(.c) MqttResponse;
 
-pub const ConnectionLostCB = fn (context: ?*anyopaque, cause: ?[*:0]u8) callconv(.C) void;
-pub const MessageArrivedCB = fn (context: ?*anyopaque, topicName: [*:0]u8, topicLen: c_int, message: *MqttMessage) callconv(.C) c_int;
-pub const DeliveryCompleteCB = fn (context: ?*anyopaque, dt: DeliveryToken) callconv(.C) void;
-extern fn MQTTClient_setCallbacks(handle: Handle, context: ?*anyopaque, cl: ?*const ConnectionLostCB, ma: *const MessageArrivedCB, dc: ?*const DeliveryCompleteCB) callconv(.C) c_int;
+pub const ConnectionLostCB = fn (context: ?*anyopaque, cause: ?[*:0]u8) callconv(.c) void;
+pub const MessageArrivedCB = fn (context: ?*anyopaque, topicName: [*:0]u8, topicLen: c_int, message: *MqttMessage) callconv(.c) c_int;
+pub const DeliveryCompleteCB = fn (context: ?*anyopaque, dt: DeliveryToken) callconv(.c) void;
+extern fn MQTTClient_setCallbacks(handle: Handle, context: ?*anyopaque, cl: ?*const ConnectionLostCB, ma: *const MessageArrivedCB, dc: ?*const DeliveryCompleteCB) callconv(.c) c_int;
 
-extern fn MQTTClient_freeMessage(msg: **MqttMessage) callconv(.C) void;
-extern fn MQTTClient_free(ptr: *anyopaque) callconv(.C) void;
+extern fn MQTTClient_freeMessage(msg: **MqttMessage) callconv(.c) void;
+extern fn MQTTClient_free(ptr: *anyopaque) callconv(.c) void;
 
 pub fn errno(rc: c_int) LibError!void {
     return switch (rc) {
